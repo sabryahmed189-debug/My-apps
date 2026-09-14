@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>بستان البرحي - المرشد الذكي لرعاية وإنتاج نخيل البرحي</title>
+  
+  <!-- خط تجوال المميز لواجهات الهواتف -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet" />
+  
+  <!-- Tailwind CSS عبر CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            tajawal: ['Tajawal', 'sans-serif'],
+          },
+          colors: {
+            palm: {
+              50: '#f2f9f4',
+              100: '#e1f2e6',
+              500: '#1b8a4f',
+              600: '#13703e',
+              700: '#0e552f',
+              800: '#0b4325',
+              900: '#062d18',
+            },
+            amberbarhi: {
+              400: '#fbbf24',
+              500: '#f59e0b',
+              600: '#d97706',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    * {
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    input, textarea, select {
+      user-select: auto;
+    }
+    body {
+      font-family: 'Tajawal', sans-serif;
+      padding-bottom: calc(5.5rem + env(safe-area-inset-bottom));
+      padding-top: env(safe-area-inset-top);
+    }
+    .safe-bottom-dock {
+      padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen relative flex flex-col justify-between">
+
+  <!-- شريط العنوان العلوي -->
+  <header class="sticky top-0 z-40 bg-palm-800 text-white shadow-md transition-all">
+    <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <!-- زر الرجوع الذكي يظهر عند الدخول للأقسام -->
+        <button id="btn-back-header" onclick="handleCustomBack()" class="hidden w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 active:scale-95 flex items-center justify-center transition">
+          <i class="fa-solid fa-arrow-right text-lg"></i>
+        </button>
+        <div class="w-10 h-10 rounded-xl bg-amberbarhi-500 text-palm-900 flex items-center justify-center shadow-inner font-black text-xl">
+          🌴
+        </div>
+        <div>
+          <h1 class="text-lg font-bold tracking-tight">بستان البرحي</h1>
+          <p id="page-subtitle" class="text-xs text-palm-100 opacity-90">المرشد الفني الميداني</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="inline-flex items-center gap-1 text-[11px] font-semibold bg-emerald-500/20 text-emerald-200 border border-emerald-400/30 px-2.5 py-1 rounded-full">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          موسم 2026
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <!-- الحاوية الرئيسية للمحتوى -->
+  <main class="flex-1 max-w-4xl w-full mx-auto p-4">
+
+    <!-- القسم 1: الرئيسية (Dashboard) -->
+    <section id="sec-home" class="space-y-4">
+      <!-- بطاقة تنبيه المرحلة الحالية -->
+      <div class="bg-gradient-to-l from-palm-800 via-palm-700 to-palm-900 rounded-2xl p-4 text-white shadow-lg relative overflow-hidden">
+        <div class="absolute -left-6 -bottom-6 w-32 h-32 bg-white/5 rounded-full blur-xl pointer-events-none"></div>
+        <div class="flex justify-between items-start mb-2">
+          <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-amberbarhi-500 text-slate-900">
+            المرحلة الحالية
+          </span>
+          <span class="text-xs text-slate-200" id="current-date-txt"></span>
+        </div>
+        <h2 class="text-xl font-black mb-1">الرعاية النشطة لنخيل البرحي</h2>
+        <p class="text-xs text-slate-200 leading-relaxed mb-3">
+          التركيز الحالي ينصب على ثبات كميات الري وتفادي أي تذبذب لمنع تشقق ثمار البلح، مع متابعة وقاية العراجين.
+        </p>
+        <div class="grid grid-cols-2 gap-2 pt-2 border-t border-white/10">
+          <div class="bg-white/10 rounded-xl p-2.5 text-center">
+            <span class="block text-[11px] text-slate-300">أولوية الري</span>
+            <span class="font-bold text-sm text-emerald-300">انتظام تام</span>
+          </div>
+          <div class="bg-white/10 rounded-xl p-2.5 text-center">
+            <span class="block text-[11px] text-slate-300">الوقاية الحرجة</span>
+            <span class="font-bold text-sm text-amber-300">حماية من التشقق</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- شبكة الوصول السريع -->
+      <div class="grid grid-cols-2 gap-3">
+        <div onclick="navigateTo('calendar')" class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm active:scale-98 transition cursor-pointer flex flex-col items-center text-center">
+          <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl mb-2">
+            <i class="fa-regular fa-calendar-check"></i>
+          </div>
+          <span class="font-bold text-slate-800 text-sm">التقويم الزراعي</span>
+          <span class="text-[11px] text-slate-400 mt-0.5">مواعيد العمليات والرش</span>
+        </div>
+
+        <div onclick="navigateTo('irrigation')" class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm active:scale-98 transition cursor-pointer flex flex-col items-center text-center">
+          <div class="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl mb-2">
+            <i class="fa-solid fa-droplet"></i>
+          </div>
+          <span class="font-bold text-slate-800 text-sm">حاسبة الري</span>
+          <span class="text-[11px] text-slate-400 mt-0.5">حساب لترات وساعات الري</span>
+        </div>
+
+        <div onclick="navigateTo('cracking')" class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm active:scale-98 transition cursor-pointer flex flex-col items-center text-center">
+          <div class="w-12 h-12 rounded-2xl bg-amber-50 text-amberbarhi-600 flex items-center justify-center text-xl mb-2">
+            <i class="fa-solid fa-shield-halved"></i>
+          </div>
+          <span class="font-bold text-slate-800 text-sm">حماية الثمار</span>
+          <span class="text-[11px] text-slate-400 mt-0.5">منع التشقق والوشم</span>
+        </div>
+
+        <div onclick="navigateTo('pests')" class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm active:scale-98 transition cursor-pointer flex flex-col items-center text-center">
+          <div class="w-12 h-12 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center text-xl mb-2">
+            <i class="fa-solid fa-bug"></i>
+          </div>
+          <span class="font-bold text-slate-800 text-sm">عيادة الآفات</span>
+          <span class="text-[11px] text-slate-400 mt-0.5">سوسة النخيل والغبير</span>
+        </div>
+      </div>
+
+      <!-- توصية اليوم الميدانية -->
+      <div class="bg-amber-50/80 border border-amber-200 rounded-2xl p-4 flex gap-3 items-start">
+        <div class="w-8 h-8 rounded-full bg-amber-500 text-white flex-shrink-0 flex items-center justify-center text-sm font-bold">
+          !
+        </div>
+        <div>
+          <h3 class="font-bold text-slate-800 text-sm mb-1">نصيحة ذهبية لنخيل البرحي</h3>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            البرحي حساس جداً لزيادة الرطوبة المفاجئة في مرحلة تحول الثمار. حافظ على تصريف التربة وتجنب الري في أوقات الظهيرة الحارة لتجنب "تشطيب وقشرة الثمرة".
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- القسم 2: التقويم الزراعي -->
+    <section id="sec-calendar" class="hidden space-y-4">
+      <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+        <h2 class="font-bold text-base text-slate-800 mb-1">التقويم السنوي للبرحي</h2>
+        <p class="text-xs text-slate-500 mb-4">جدول الممارسات الزراعية المعتمدة شهراً بشهر</p>
+
+        <!-- فلتر العمليات -->
+        <div class="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
+          <button onclick="filterCalendar('all')" class="cal-btn px-3 py-1.5 rounded-full text-xs font-bold bg-palm-700 text-white" data-type="all">الكل</button>
+          <button onclick="filterCalendar('spray')" class="cal-btn px-3 py-1.5 rounded-full text-xs font-bold bg-slate-100 text-slate-600" data-type="spray">برامج الرش</button>
+          <button onclick="filterCalendar('tech')" class="cal-btn px-3 py-1.5 rounded-full text-xs font-bold bg-slate-100 text-slate-600" data-type="tech">عمليات فنية</button>
+          <button onclick="filterCalendar('water')" class="cal-btn px-3 py-1.5 rounded-full text-xs font-bold bg-slate-100 text-slate-600" data-type="water">الري والتسميد</button>
+        </div>
+      </div>
+
+      <!-- قائمة المواعيد -->
+      <div id="calendar-items" class="space-y-3">
+        <!-- فبراير - مارس -->
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm border-r-4 border-r-emerald-500 cal-card" data-cat="tech">
+          <div class="flex justify-between items-start mb-1">
+            <span class="text-xs font-bold text-emerald-700">فبراير - مارس</span>
+            <span class="text-[10px] bg-emerald-50 text-emerald-600 px-2 py-0.5 rounded-full font-bold">التلقيح والعقد</span>
+          </div>
+          <h3 class="font-bold text-sm text-slate-800 mb-1">التلقيح الميكانيكي أو اليدوي</h3>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            استخدام حبوب لقاح طازجة وحيوية (بمعدل 4-6 شماريخ مذكرة لكل عرجون مؤنث) خلال 48 ساعة من انشقاق الكافور.
+          </p>
+        </div>
+
+        <!-- أبريل -->
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm border-r-4 border-r-amber-500 cal-card" data-cat="tech">
+          <div class="flex justify-between items-start mb-1">
+            <span class="text-xs font-bold text-amber-700">أبريل</span>
+            <span class="text-[10px] bg-amber-50 text-amber-600 px-2 py-0.5 rounded-full font-bold">خف الثمار</span>
+          </div>
+          <h3 class="font-bold text-sm text-slate-800 mb-1">خف وتفريد عراجين البرحي</h3>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            تقصير 15% إلى 20% من أطراف الشماريخ، وتفريد الشماريخ الداخلية لمنع تزاحم الثمار ورفع وزن الحبة إلى أكثر من 20-25 جرام.
+          </p>
+        </div>
+
+        <!-- مايو - يونيو -->
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm border-r-4 border-r-rose-500 cal-card" data-cat="spray">
+          <div class="flex justify-between items-start mb-1">
+            <span class="text-xs font-bold text-rose-700">مايو - يونيو</span>
+            <span class="text-[10px] bg-rose-50 text-rose-600 px-2 py-0.5 rounded-full font-bold">مكافحة وقائية</span>
+          </div>
+          <h3 class="font-bold text-sm text-slate-800 mb-1">رش حلم الغبار (الغبير) والكالسيوم</h3>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            رش الكبريت الميكروني الوقائي بمعدل 250جم/100لتر ماء، مع الرشة الأولى للكالسيوم-بورون لصلابة جدر الخلايا.
+          </p>
+        </div>
+
+        <!-- يوليو -->
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm border-r-4 border-r-blue-500 cal-card" data-cat="tech">
+          <div class="flex justify-between items-start mb-1">
+            <span class="text-xs font-bold text-blue-700">يوليو</span>
+            <span class="text-[10px] bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full font-bold">التكميم</span>
+          </div>
+          <h3 class="font-bold text-sm text-slate-800 mb-1">تكميم العراجين (أكياس شبكية)</h3>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            تغطية العراجين بشباك مهواة ذات مسام دقيقة لحمايتها من لسعات الشمس وغبار الرياح والحشرات، مع ضمان دوران الهواء لمنع تعرق البلح.
+          </p>
+        </div>
+
+        <!-- أغسطس - سبتمبر -->
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm border-r-4 border-r-emerald-500 cal-card" data-cat="water">
+          <div class="flex justify-between items-start mb-1">
+            <span class="text-xs font-bold text-emerald-700">أغسطس - سبتمبر</span>
+            <span class="text-[10px] bg-emerald-50 text-emerald-600 px-2 py-0.5 rounded-full font-bold">الخلال والرطب</span>
+          </div>
+          <h3 class="font-bold text-sm text-slate-800 mb-1">إدارة الري قبيل الحصاد</h3>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            تقليل المياه بنسبة 20% لتكثيف السكريات وسهولة تسويق البلح الخلال المقرمش مع المحافظة على رطوبة التربة دون انقطاع.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- القسم 3: حاسبة مياه الري الدقيقة -->
+    <section id="sec-irrigation" class="hidden space-y-4">
+      <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+        <h2 class="font-bold text-base text-slate-800 mb-1">حاسبة الاحتياج المائي للبرحي</h2>
+        <p class="text-xs text-slate-500 mb-4">احسب الكمية باللتر وساعات تشغيل النقاطات يومياً لتجنب صدمات العطش</p>
+
+        <div class="space-y-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">عمر النخلة</label>
+            <select id="palm-age" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs text-slate-800 font-medium focus:outline-none focus:border-palm-600">
+              <option value="young">نخلة صغيرة (1 - 3 سنوات)</option>
+              <option value="medium">بداية الإثمار (4 - 7 سنوات)</option>
+              <option value="mature" selected>نخلة بالغة مثمرة كاملة (+8 سنوات)</option>
+            </select>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">نوع التربة</label>
+              <select id="soil-type" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs text-slate-800 font-medium focus:outline-none focus:border-palm-600">
+                <option value="sandy">رملية (سريعة الصرف)</option>
+                <option value="clay">طينية / لومية</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">الموسم / الجو</label>
+              <select id="weather-season" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs text-slate-800 font-medium focus:outline-none focus:border-palm-600">
+                <option value="summer" selected>الصيف الحار (يونيو - أغسطس)</option>
+                <option value="spring">الربيع المعتدل (مارس - مايو)</option>
+                <option value="fall">الخريف (سبتمبر - نوفمبر)</option>
+                <option value="winter">الشتاء (ديسمبر - فبراير)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">عدد النقاطات للنخلة</label>
+              <input type="number" id="emitters-count" value="4" min="1" max="16" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs text-slate-800 font-medium focus:outline-none focus:border-palm-600" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">تصريف النقاط (لتر/ساعة)</label>
+              <input type="number" id="emitter-flow" value="8" min="2" max="50" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs text-slate-800 font-medium focus:outline-none focus:border-palm-600" />
+            </div>
+          </div>
+
+          <button onclick="calculateIrrigation()" class="w-full bg-palm-700 hover:bg-palm-800 active:scale-98 text-white font-bold py-3 rounded-xl text-sm transition mt-2 shadow-sm">
+            حساب الاحتياج المائي الآن
+          </button>
+        </div>
+      </div>
+
+      <!-- نتيجة الحساب -->
+      <div id="irrigation-result" class="bg-gradient-to-br from-blue-900 to-slate-900 text-white p-4 rounded-2xl shadow-md space-y-3">
+        <h3 class="text-xs font-semibold text-blue-300">النتيجة التقديرية للري</h3>
+        <div class="grid grid-cols-2 gap-3">
+          <div class="bg-white/10 rounded-xl p-3 text-center">
+            <span class="text-[11px] text-slate-300 block mb-1">احتياج النخلة اليومي</span>
+            <span id="res-liters" class="text-2xl font-black text-blue-300">180</span>
+            <span class="text-xs text-slate-300 mr-1">لتر/يوم</span>
+          </div>
+          <div class="bg-white/10 rounded-xl p-3 text-center">
+            <span class="text-[11px] text-slate-300 block mb-1">مدة تشغيل الشبكة</span>
+            <span id="res-hours" class="text-2xl font-black text-amberbarhi-400">5.5</span>
+            <span class="text-xs text-slate-300 mr-1">ساعة</span>
+          </div>
+        </div>
+        <div class="p-2.5 rounded-xl bg-white/5 border border-white/10 text-xs text-slate-300">
+          <p id="res-advice">ينصح بالري في الصباح الباكر (5:00 - 8:00 صباحاً) أو المساء لتقليل التبخر وتفادي صدمة الجذور.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- القسم 4: بروتوكول منع تشقق البرحي -->
+    <section id="sec-cracking" class="hidden space-y-4">
+      <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+        <h2 class="font-bold text-base text-slate-800 mb-1">دليل حماية البلح من التشقق</h2>
+        <p class="text-xs text-slate-500 mb-2">التشقق (الوشم والتشطيب) هو أكبر تحدٍ في البرحي.. إليك أسبابه والحل العلمي</p>
+      </div>
+
+      <div class="space-y-3">
+        <!-- خطوة 1 -->
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex gap-3">
+          <div class="w-8 h-8 rounded-xl bg-amber-100 text-amber-700 font-black flex items-center justify-center flex-shrink-0 text-sm">
+            1
+          </div>
+          <div>
+            <h3 class="font-bold text-sm text-slate-800 mb-1">انتظام برنامج الري الحازم</h3>
+            <p class="text-xs text-slate-600 leading-relaxed">
+              <strong>السبب الرئيسي:</strong> تعطيش النخيل ثم ريه بكميات غزيرة فجأة يؤدي لانتفاخ اللب الداخلي بسرعة تفوق تمدد القشرة؛ ما يسبب انفجارها. يجب الحفاظ على رطوبة مستقرة دون تذبذب.
+            </p>
+          </div>
+        </div>
+
+        <!-- خطوة 2 -->
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex gap-3">
+          <div class="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-700 font-black flex items-center justify-center flex-shrink-0 text-sm">
+            2
+          </div>
+          <div>
+            <h3 class="font-bold text-sm text-slate-800 mb-1">الرش الورقي: كالسيوم + بورون</h3>
+            <p class="text-xs text-slate-600 leading-relaxed">
+              الكالسيوم يبني الجدار الخلوي للقشرة ويزيد مرونتها، والبورون ينقل السكريات. رُش بتركيز (2 إلى 2.5 سم/لتر) مرتين: الأولى في مرحلة الجمري، والثانية في بداية تحول اللون.
+            </p>
+          </div>
+        </div>
+
+        <!-- خطوة 3 -->
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex gap-3">
+          <div class="w-8 h-8 rounded-xl bg-blue-100 text-blue-700 font-black flex items-center justify-center flex-shrink-0 text-sm">
+            3
+          </div>
+          <div>
+            <h3 class="font-bold text-sm text-slate-800 mb-1">تكميم بشباك زراعية مهواة</h3>
+            <p class="text-xs text-slate-600 leading-relaxed">
+              احذر من الأكياس البلاستيكية المغلقة أو الورقية الكتيمة التي تحبس بخار الماء وتسبب تكثف الندى على الثمار (ظاهرة التشطيب). استخدم أكياس شبكية زرقاء أو بيضاء ذات تهوية كاملة.
+            </p>
+          </div>
+        </div>
+
+        <!-- خطوة 4 -->
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex gap-3">
+          <div class="w-8 h-8 rounded-xl bg-purple-100 text-purple-700 font-black flex items-center justify-center flex-shrink-0 text-sm">
+            4
+          </div>
+          <div>
+            <h3 class="font-bold text-sm text-slate-800 mb-1">الخف والتهوية وتفادي الحمل الزائد</h3>
+            <p class="text-xs text-slate-600 leading-relaxed">
+              النخلة المحملة بأكثر من طاقتها تعطي ثماراً ذات جدار خلوي ضعيف رقيق يسهل تشققه عند أقل رطوبة. اضبط عدد العراجين بحيث لا يتجاوز 8 - 12 عرجوناً للنخلة القوية.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- القسم 5: عيادة الآفات -->
+    <section id="sec-pests" class="hidden space-y-4">
+      <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+        <h2 class="font-bold text-base text-slate-800 mb-1">عيادة آفات وأمراض النخيل</h2>
+        <p class="text-xs text-slate-500 mb-3">دليل التشخيص والمكافحة الكيميائية وفترات الأمان (PHI)</p>
+
+        <div class="relative">
+          <i class="fa-solid fa-magnifying-glass absolute right-3 top-3 text-slate-400 text-xs"></i>
+          <input type="text" id="pest-search" oninput="searchPests()" placeholder="ابحث عن آفة أو مرض..." class="w-full bg-slate-50 border border-slate-200 rounded-xl pr-9 pl-3 py-2 text-xs text-slate-800 focus:outline-none focus:border-palm-600" />
+        </div>
+      </div>
+
+      <div id="pests-container" class="space-y-3">
+        <!-- حلم الغبار -->
+        <div class="pest-card bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+          <div class="flex justify-between items-start mb-2">
+            <h3 class="font-bold text-sm text-slate-800">حلم الغبار / الغبير (Oligonychus afrasiaticus)</h3>
+            <span class="text-[10px] bg-rose-50 text-rose-600 px-2 py-0.5 rounded-full font-bold">خطير على البلح</span>
+          </div>
+          <p class="text-xs text-slate-600 leading-relaxed mb-2">
+            <strong>الأعراض:</strong> نسيج عنكبوتي دقيق يجمع الغبار حول الثمار في مرحلة الجمري، وتتحول الثمرة للون بني فليني غير صالح للتسويق.
+          </p>
+          <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-100 text-xs space-y-1">
+            <div><strong class="text-palm-700">العلاج الموصى به:</strong> رش كبريت ميكروني (250جم/100لتر) وقائياً، أو أورتس (Fenpyroximate) / أوبيرون (Spiromesifen) عند الإصابة.</div>
+            <div class="text-slate-500 text-[11px]">فترة الأمان (PHI): 14 - 21 يوماً قبل الجمع.</div>
+          </div>
+        </div>
+
+        <!-- سوسة النخيل الحمراء -->
+        <div class="pest-card bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+          <div class="flex justify-between items-start mb-2">
+            <h3 class="font-bold text-sm text-slate-800">سوسة النخيل الحمراء</h3>
+            <span class="text-[10px] bg-red-100 text-red-700 px-2 py-0.5 rounded-full font-bold">مدمرة للأشجار</span>
+          </div>
+          <p class="text-xs text-slate-600 leading-relaxed mb-2">
+            <strong>الأعراض:</strong> خروج إفرازات صمغية بنية ذات رائحة مميزة من الجذع، تآكل داخلي بالأنسجة، اصفرار وموت السعف الداخلي.
+          </p>
+          <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-100 text-xs space-y-1">
+            <div><strong class="text-palm-700">العلاج الموصى به:</strong> الحقن المباشر بمركبات إيميداكلوبريد (Imidacloprid) أو حقن غاز الفوستوكسين مع التكبيس التام بإشراف فني.</div>
+            <div class="text-slate-500 text-[11px]">الوقاية: تعفير قواعد الفسائل بالسيفين أو الكبريت بعد التقليم فوراً.</div>
+          </div>
+        </div>
+
+        <!-- خياس الطلع -->
+        <div class="pest-card bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+          <div class="flex justify-between items-start mb-2">
+            <h3 class="font-bold text-sm text-slate-800">خياس الطلع الفطري (Mauginiella scaettae)</h3>
+            <span class="text-[10px] bg-amber-50 text-amber-700 px-2 py-0.5 rounded-full font-bold">مرض فطري</span>
+          </div>
+          <p class="text-xs text-slate-600 leading-relaxed mb-2">
+            <strong>الأعراض:</strong> تعفن الشماريخ الطلعية قبل أو بعد خروجها من الكافور وتحولها للون البني المسود مع رائحة تعفن، وموت حبوب اللقاح.
+          </p>
+          <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-100 text-xs space-y-1">
+            <div><strong class="text-palm-700">العلاج الموصى به:</strong> رش هيدروكسيد النحاس أو أكسيكلورور النحاس بعد جني المحصول وفي الشتاء قبل تفتح الطلع.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- القسم 6: سجل العمليات -->
+    <section id="sec-logs" class="hidden space-y-4">
+      <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+        <h2 class="font-bold text-base text-slate-800 mb-1">سجل عمليات المزرعة</h2>
+        <p class="text-xs text-slate-500 mb-3">وثّق أعمال الرش والري والتسميد لحفظ تاريخ بستانك</p>
+
+        <form id="farm-log-form" onsubmit="saveLog(event)" class="space-y-2.5">
+          <div>
+            <label class="block text-[11px] font-bold text-slate-700 mb-1">نوع العملية</label>
+            <select id="log-type" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2 text-xs font-medium">
+              <option value="رش مبيد">رش مبيد وقائي / علاجي</option>
+              <option value="تسميد">تسميد أرضي أو ورقي</option>
+              <option value="خف وتقويس">خف أو تقويس أو تكميم</option>
+              <option value="ري استثنائي">ضبط ساعات الري</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-[11px] font-bold text-slate-700 mb-1">ملاحظات والتفاصيل (المادة، الكمية، الحوض)</label>
+            <input type="text" id="log-notes" required placeholder="مثال: رش كالسيوم بورون 2 لتر / 1000 لتر ماء" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2 text-xs font-medium focus:outline-none focus:border-palm-600" />
+          </div>
+          <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl text-xs transition active:scale-98">
+            حفظ في السجل
+          </button>
+        </form>
+      </div>
+
+      <!-- قائمة السجلات المحفوظة -->
+      <div class="space-y-2">
+        <div class="flex justify-between items-center px-1">
+          <span class="text-xs font-bold text-slate-700">العمليات السابقة</span>
+          <button onclick="clearLogs()" class="text-[11px] text-red-500 hover:underline">مسح الكل</button>
+        </div>
+        <div id="logs-list" class="space-y-2">
+          <!-- تملأ برمجياً -->
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- شريط التنقل السفلي للهواتف (Mobile Bottom Dock) -->
+  <nav class="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-t border-slate-200 safe-bottom-dock shadow-[0_-4px_16px_rgba(0,0,0,0.06)]">
+    <div class="max-w-4xl mx-auto px-2 flex justify-around items-center">
+      
+      <button onclick="navigateTo('home')" class="nav-item flex flex-col items-center py-2 px-2 text-palm-700 font-bold" data-target="home">
+        <i class="fa-solid fa-house text-lg mb-1"></i>
+        <span class="text-[10px]">الرئيسية</span>
+      </button>
+
+      <button onclick="navigateTo('calendar')" class="nav-item flex flex-col items-center py-2 px-2 text-slate-400 hover:text-palm-700" data-target="calendar">
+        <i class="fa-regular fa-calendar-check text-lg mb-1"></i>
+        <span class="text-[10px]">التقويم</span>
+      </button>
+
+      <button onclick="navigateTo('irrigation')" class="nav-item flex flex-col items-center py-2 px-2 text-slate-400 hover:text-palm-700" data-target="irrigation">
+        <i class="fa-solid fa-droplet text-lg mb-1"></i>
+        <span class="text-[10px]">الري</span>
+      </button>
+
+      <button onclick="navigateTo('cracking')" class="nav-item flex flex-col items-center py-2 px-2 text-slate-400 hover:text-palm-700" data-target="cracking">
+        <i class="fa-solid fa-shield-halved text-lg mb-1"></i>
+        <span class="text-[10px]">التشقق</span>
+      </button>
+
+      <button onclick="navigateTo('pests')" class="nav-item flex flex-col items-center py-2 px-2 text-slate-400 hover:text-palm-700" data-target="pests">
+        <i class="fa-solid fa-bug text-lg mb-1"></i>
+        <span class="text-[10px]">الآفات</span>
+      </button>
+
+      <button onclick="navigateTo('logs')" class="nav-item flex flex-col items-center py-2 px-2 text-slate-400 hover:text-palm-700" data-target="logs">
+        <i class="fa-solid fa-book-bookmark text-lg mb-1"></i>
+        <span class="text-[10px]">السجل</span>
+      </button>
+
+    </div>
+  </nav>
+
+  <!-- نافذة تأكيد الخروج عند الضغط على زر الرجوع في الهاتف -->
+  <div id="exit-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-white rounded-3xl p-5 max-w-xs w-full shadow-2xl text-center space-y-4 animate-in fade-in zoom-in duration-150">
+      <div class="w-14 h-14 rounded-2xl bg-amber-100 text-amberbarhi-600 flex items-center justify-center mx-auto text-2xl">
+        🌴
+      </div>
+      <div>
+        <h4 class="font-bold text-base text-slate-800">مغادرة التطبيق</h4>
+        <p class="text-xs text-slate-500 mt-1">هل أنت متأكد من رغبتك في إغلاق تطبيق بستان البرحي؟</p>
+      </div>
+      <div class="grid grid-cols-2 gap-2 pt-2">
+        <button onclick="closeExitModal()" class="w-full py-2.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-600 active:bg-slate-100">
+          إلغاء
+        </button>
+        <button onclick="confirmExitApp()" class="w-full py-2.5 rounded-xl bg-red-600 text-white text-xs font-bold active:bg-red-700 shadow-sm">
+          خروج
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // -------------------------------------------------------------
+    // إعدادات التاريخ والملاحة
+    // -------------------------------------------------------------
+    const optionsDate = { year: 'numeric', month: 'long', day: 'numeric' };
+    document.getElementById('current-date-txt').innerText = new Date().toLocaleDateString('ar-EG', optionsDate);
+
+    let currentSection = 'home';
+
+    // تهيئة سجل التصفح الداخلي لمنع الخروج المفاجئ عند الضغط على Back
+    window.addEventListener('load', () => {
+      window.history.replaceState({ section: 'home' }, '', '');
+      renderLogs();
+    });
+
+    // التنقل بين الأقسام
+    function navigateTo(sectionId, pushHistory = true) {
+      if (currentSection === sectionId) return;
+
+      // إخفاء كل الأقسام
+      ['home', 'calendar', 'irrigation', 'cracking', 'pests', 'logs'].forEach(sec => {
+        const el = document.getElementById('sec-' + sec);
+        if (el) el.classList.add('hidden');
+      });
+
+      // إظهار القسم المطلوب
+      const targetEl = document.getElementById('sec-' + sectionId);
+      if (targetEl) targetEl.classList.remove('hidden');
+
+      // تحديث أزرار الشريط السفلي
+      document.querySelectorAll('.nav-item').forEach(btn => {
+        const isTarget = btn.getAttribute('data-target') === sectionId;
+        btn.classList.toggle('text-palm-700', isTarget);
+        btn.classList.toggle('font-bold', isTarget);
+        btn.classList.toggle('text-slate-400', !isTarget);
+      });
+
+      // تحديث زر الرجوع العلوي
+      const backBtn = document.getElementById('btn-back-header');
+      const subtitle = document.getElementById('page-subtitle');
+      if (sectionId === 'home') {
+        backBtn.classList.add('hidden');
+        subtitle.innerText = 'المرشد الفني الميداني';
+      } else {
+        backBtn.classList.remove('hidden');
+        const titles = {
+          calendar: 'التقويم السنوي',
+          irrigation: 'حاسبة الري الدقيقة',
+          cracking: 'مكافحة التشقق',
+          pests: 'عيادة الآفات والمبيدات',
+          logs: 'سجل المزرعة'
+        };
+        subtitle.innerText = titles[sectionId] || 'بستان البرحي';
+      }
+
+      currentSection = sectionId;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      // إضافة حالة للسجل التاريخي للرجوع
+      if (pushHistory) {
+        window.history.pushState({ section: sectionId }, '', '');
+      }
+    }
+
+    // زر الرجوع المخصص في الهيدر
+    function handleCustomBack() {
+      if (currentSection !== 'home') {
+        navigateTo('home', true);
+      }
+    }
+
+    // معالجة زر الرجوع الفيزيائي / إيماءة الرجوع في هاتف أندرويد
+    window.addEventListener('popstate', (event) => {
+      if (currentSection !== 'home') {
+        // إذا كان المستخدم في أي قسم، يرجع للرئيسية ولا يغلق التطبيق
+        navigateTo('home', false);
+      } else {
+        // إذا كان بالفعل في الرئيسية وضغط رجوع، نعرض نافذة التأكيد
+        showExitModal();
+        // إعادة حفظ الحالة لمنع الخروج القسري قبل موافقة المستخدم
+        window.history.pushState({ section: 'home' }, '', '');
+      }
+    });
+
+    function showExitModal() {
+      const modal = document.getElementById('exit-modal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeExitModal() {
+      const modal = document.getElementById('exit-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function confirmExitApp() {
+      closeExitModal();
+      // محاولة الإغلاق عبر أوضاع الويب والتطبيقات
+      if (window.navigator && window.navigator.app && window.navigator.app.exitApp) {
+        window.navigator.app.exitApp();
+      } else {
+        window.history.go(-2);
+      }
+    }
+
+    // -------------------------------------------------------------
+    // فلترة التقويم الزراعي
+    // -------------------------------------------------------------
+    function filterCalendar(type) {
+      document.querySelectorAll('.cal-btn').forEach(btn => {
+        const isMatch = btn.getAttribute('data-type') === type;
+        btn.classList.toggle('bg-palm-700', isMatch);
+        btn.classList.toggle('text-white', isMatch);
+        btn.classList.toggle('bg-slate-100', !isMatch);
+        btn.classList.toggle('text-slate-600', !isMatch);
+      });
+
+      document.querySelectorAll('.cal-card').forEach(card => {
+        if (type === 'all' || card.getAttribute('data-cat') === type) {
+          card.classList.remove('hidden');
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+    }
+
+    // -------------------------------------------------------------
+    // حاسبة الري
+    // -------------------------------------------------------------
+    function calculateIrrigation() {
+      const age = document.getElementById('palm-age').value;
+      const soil = document.getElementById('soil-type').value;
+      const season = document.getElementById('weather-season').value;
+      const count = parseFloat(document.getElementById('emitters-count').value) || 4;
+      const flow = parseFloat(document.getElementById('emitter-flow').value) || 8;
+
+      // قاعدة الحساب باللتر للنخلة البالغة في الصيف
+      let baseLiters = 180;
+
+      if (season === 'winter') baseLiters = 60;
+      else if (season === 'spring') baseLiters = 120;
+      else if (season === 'fall') baseLiters = 110;
+      else if (season === 'summer') baseLiters = 200;
+
+      // معامل العمر
+      if (age === 'young') baseLiters *= 0.35;
+      else if (age === 'medium') baseLiters *= 0.70;
+
+      // معامل التربة
+      if (soil === 'sandy') baseLiters *= 1.15; // زيادة طفيفة لتعويض التسرب السريع
+
+      const totalFlowPerHour = count * flow; // لتر بالساعة للنخلة
+      const hours = (baseLiters / totalFlowPerHour);
+
+      document.getElementById('res-liters').innerText = Math.round(baseLiters);
+      document.getElementById('res-hours').innerText = hours.toFixed(1);
+
+      const adviceEl = document.getElementById('res-advice');
+      if (soil === 'sandy') {
+        adviceEl.innerText = 'تربة رملية: يُفضل تقسيم وقت الري على نبضتين (صباحاً ومساءً) لتفادي غسيل العناصر ومقاومة التشقق.';
+      } else {
+        adviceEl.innerText = 'تربة طينية/لومية: الري دفعة واحدة صباحاً مع مراقبة الصرف لتفادي اختناق الجذور وتعفنها.';
+      }
+    }
+
+    // -------------------------------------------------------------
+    // البحث في الآفات
+    // -------------------------------------------------------------
+    function searchPests() {
+      const query = document.getElementById('pest-search').value.toLowerCase().trim();
+      document.querySelectorAll('.pest-card').forEach(card => {
+        const text = card.innerText.toLowerCase();
+        if (text.includes(query)) {
+          card.classList.remove('hidden');
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+    }
+
+    // -------------------------------------------------------------
+    // إدارة سجل العمليات محلياً (LocalStorage)
+    // -------------------------------------------------------------
+    function getStoredLogs() {
+      return JSON.parse(localStorage.getItem('barhi_logs') || '[]');
+    }
+
+    function saveLog(e) {
+      e.preventDefault();
+      const type = document.getElementById('log-type').value;
+      const notes = document.getElementById('log-notes').value;
+      const date = new Date().toLocaleDateString('ar-EG');
+
+      const logs = getStoredLogs();
+      logs.unshift({ id: Date.now(), date, type, notes });
+      localStorage.setItem('barhi_logs', JSON.stringify(logs));
+
+      document.getElementById('farm-log-form').reset();
+      renderLogs();
+    }
+
+    function deleteLog(id) {
+      let logs = getStoredLogs();
+      logs = logs.filter(item => item.id !== id);
+      localStorage.setItem('barhi_logs', JSON.stringify(logs));
+      renderLogs();
+    }
+
+    function clearLogs() {
+      if (confirm('هل ترغب في حذف كافة السجلات المسجلة؟')) {
+        localStorage.removeItem('barhi_logs');
+        renderLogs();
+      }
+    }
+
+    function renderLogs() {
+      const listEl = document.getElementById('logs-list');
+      const logs = getStoredLogs();
+
+      if (logs.length === 0) {
+        listEl.innerHTML = `
+          <div class="bg-white p-4 rounded-xl border border-dashed border-slate-200 text-center text-xs text-slate-400">
+            لا توجد عمليات مسجلة حتى الآن. ابدأ بتسجيل أول عملية!
+          </div>
+        `;
+        return;
+      }
+
+      listEl.innerHTML = logs.map(item => `
+        <div class="bg-white p-3 rounded-xl border border-slate-200 flex justify-between items-start text-xs shadow-xs">
+          <div>
+            <div class="flex items-center gap-2 mb-1">
+              <span class="font-bold text-slate-800">${item.type}</span>
+              <span class="text-[10px] text-slate-400">${item.date}</span>
+            </div>
+            <p class="text-slate-600">${item.notes}</p>
+          </div>
+          <button onclick="deleteLog(${item.id})" class="text-slate-300 hover:text-red-500 p-1">
+            <i class="fa-solid fa-trash-can"></i>
+          </button>
+        </div>
+      `).join('');
+    }
+  </script>
+</body>
+</html>
