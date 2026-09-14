@@ -24,16 +24,26 @@ jobs:
           distribution: 'zulu'
           java-version: 17
 
-      - name: Initialize Capacitor App
+      - name: Prepare Web Assets
         run: |
-          npm init -y
-          npm install @capacitor/core @capacitor/cli @capacitor/android
-          npx cap init "MyApp" "com.example.myapp" --web-dir www
           mkdir -p www
           cp -r index.html www/
           [ -d css ] && cp -r css www/ || true
           [ -d js ] && cp -r js www/ || true
           [ -d images ] && cp -r images www/ || true
+
+      - name: Initialize and Build Capacitor Project
+        run: |
+          npm init -y
+          npm install @capacitor/core @capacitor/cli @capacitor/android
+          cat <<EOF > capacitor.config.json
+          {
+            "appId": "com.myapp.web",
+            "appName": "MyApp",
+            "webDir": "www",
+            "bundledWebRuntime": false
+          }
+          EOF
           npx cap add android
 
       - name: Build Debug APK
