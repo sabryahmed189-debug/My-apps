@@ -16,10 +16,10 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
 
       - name: Setup Java
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: 17
@@ -32,9 +32,8 @@ jobs:
           npm init -y
           npm install @capacitor/core @capacitor/cli @capacitor/android
           npx cap init "MyApp" "com.example.myapp" --web-dir www
-          mkdir www
+          mkdir -p www
           cp -r index.html www/
-          # نسخ أي ملفات أو مجلدات إضافية إن وجدت
           [ -d css ] && cp -r css www/ || true
           [ -d js ] && cp -r js www/ || true
           [ -d images ] && cp -r images www/ || true
